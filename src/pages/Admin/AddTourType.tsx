@@ -1,3 +1,4 @@
+import { DeleteConfirmation } from "@/components/ConfirmationDelete";
 import { AddTourTypeModal } from "@/components/modules/Admin/AddTourTypeModal";
 import { Button } from "@/components/ui/button";
 import {
@@ -8,12 +9,27 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useGetTourTypesQuery } from "@/redux/features/tour/tour.api";
+import { useGetTourTypesQuery, useRemoveTourTypeMutation } from "@/redux/features/tour/tour.api";
 import { Trash2 } from "lucide-react";
+import { toast } from "sonner";
 
 const AddTourType = () => {
   const { data } = useGetTourTypesQuery(undefined);
-  console.log(data);
+  const [removeTourType] = useRemoveTourTypeMutation();
+
+  const handleTourTypeRemove = async (tourTypeId : string) => {
+    try {
+      const toastId = toast.loading("Removing")
+      const res = await removeTourType(tourTypeId).unwrap();
+      
+      if(res.success){
+        toast.success("Tour type removed successfully", {id : toastId})
+      }
+    } catch (error) {
+      // toast.error("Failed to remove tour type", { id: toastId });
+      console.log(error);
+    }
+  }
   return (
     <div className=" w-full max-w-7xl mx-auto px-5">
       <div className="flex justify-between mb-5">
@@ -29,10 +45,14 @@ const AddTourType = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {data?.map((item : {name : string}) => (
+            {data?.map((item : {_id : string; name : string}) => (
               <TableRow className="">
                 <TableCell className="font-medium w-full">{item?.name}</TableCell>
-                <TableCell className="font-medium"><Button size={"sm"}><Trash2/></Button></TableCell>
+                <TableCell className="font-medium">
+                  <DeleteConfirmation onConfirm={() => handleTourTypeRemove(item._id)}>
+                  <Button size={"sm"}><Trash2/></Button>
+                  </DeleteConfirmation>
+                  </TableCell>
               </TableRow>
             ))}
           </TableBody>

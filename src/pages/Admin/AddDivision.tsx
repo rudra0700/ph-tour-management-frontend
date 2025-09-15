@@ -1,9 +1,10 @@
+import { AddDivisionModal } from "@/components/modules/Admin/AddDivisionModal";
 
 
 const AddDivision = () => {
     return (
         <div>
-            From divison page
+            <AddDivisionModal></AddDivisionModal>
         </div>
     );
 };
