@@ -45,7 +45,7 @@ export function AddTourTypeModal() {
                                   <FormItem>
                                     <FormLabel></FormLabel>
                                     <FormControl>
-                                      <Input placeholder="Tour type" {...field} />
+                                      <Input placeholder="Tour type" {...field} value={field.value || ""} />
                                     </FormControl>
                                     <FormMessage />
                                   </FormItem>
